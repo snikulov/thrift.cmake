@@ -2,11 +2,11 @@ project(thrift)
 
 # set compiler sources root path
 set(THRIFT_SRC_PATH ${THRIFT_SRC_ROOT}/compiler/cpp)
+file(TO_CMAKE_PATH ${THRIFT_SRC_PATH} SRC_PATH)
 
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
 
-file(TO_CMAKE_PATH ${THRIFT_SRC_PATH} SRC_PATH)
 FLEX_TARGET(thriftl.cc ${SRC_PATH}/src/thriftl.ll
     ${CMAKE_CURRENT_BINARY_DIR}/thriftl.cc)
 BISON_TARGET(thrifty.cc ${SRC_PATH}/src/thrifty.yy
