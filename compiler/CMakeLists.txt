@@ -1,15 +1,17 @@
-project(thrift)
+project(compiler)
 
 # set compiler sources root path
-set(THRIFT_SRC_PATH ${THRIFT_SRC_ROOT}/compiler/cpp)
-file(TO_CMAKE_PATH ${THRIFT_SRC_PATH} SRC_PATH)
+get_filename_component(ABS_PATH ${THRIFT_SRC_ROOT} ABSOLUTE)
+set(COMP_SRC_PATH ${ABS_PATH}/compiler/cpp)
+message("Thrift absolute source path = ${ABS_PATH}")
+message("Thrift compiler path = ${COMP_SRC_PATH}")
 
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
 
-FLEX_TARGET(thriftl.cc ${SRC_PATH}/src/thriftl.ll
+FLEX_TARGET(thriftl.cc ${COMP_SRC_PATH}/src/thriftl.ll
     ${CMAKE_CURRENT_BINARY_DIR}/thriftl.cc)
-BISON_TARGET(thrifty.cc ${SRC_PATH}/src/thrifty.yy
+BISON_TARGET(thrifty.cc ${COMP_SRC_PATH}/src/thrifty.yy
     ${CMAKE_CURRENT_BINARY_DIR}/thrifty.cc
     COMPILE_FLAGS "-y --defines")
 
@@ -25,30 +27,30 @@ if(MSVC)
     add_definitions(-DYY_NO_UNISTD_H)
 endif()
 
-configure_file(${SRC_PATH}/src/windows/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h COPYONLY)
+configure_file(${COMP_SRC_PATH}/src/windows/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h COPYONLY)
 
-include_directories(${SRC_PATH}/src/windows)
+include_directories(${COMP_SRC_PATH}/src/windows)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${SRC_PATH}/src)
-include_directories(${SRC_PATH}/src/generate)
+include_directories(${COMP_SRC_PATH}/src)
+include_directories(${COMP_SRC_PATH}/src/generate)
 include_directories(${SRC_ROOT}/src/parse)
 
-file(GLOB GENERATE_SRC ${SRC_PATH}/src/generate/*.cc)
-file(GLOB GENERATE_HDR ${SRC_PATH}/src/generate/*.h)
-file(GLOB PARSE_SRC ${SRC_PATH}/src/parse/*.cc)
-file(GLOB PARSE_HDR ${SRC_PATH}/src/parse/*.h)
+file(GLOB GENERATE_SRC ${COMP_SRC_PATH}/src/generate/*.cc)
+file(GLOB GENERATE_HDR ${COMP_SRC_PATH}/src/generate/*.h)
+file(GLOB PARSE_SRC ${COMP_SRC_PATH}/src/parse/*.cc)
+file(GLOB PARSE_HDR ${COMP_SRC_PATH}/src/parse/*.h)
 
 set(CPP_SRC
-    ${SRC_PATH}/src/globals.h
-    ${SRC_PATH}/src/main.cc
-    ${SRC_PATH}/src/main.h
-    ${SRC_PATH}/src/md5.c
-    ${SRC_PATH}/src/md5.h
-    ${SRC_PATH}/src/platform.h
+    ${COMP_SRC_PATH}/src/globals.h
+    ${COMP_SRC_PATH}/src/main.cc
+    ${COMP_SRC_PATH}/src/main.h
+    ${COMP_SRC_PATH}/src/md5.c
+    ${COMP_SRC_PATH}/src/md5.h
+    ${COMP_SRC_PATH}/src/platform.h
     )
 
 
-add_executable(thrift
+add_executable(compiler
     ${CMAKE_CURRENT_BINARY_DIR}/thriftl.cc
     ${CMAKE_CURRENT_BINARY_DIR}/thrifty.cc
     ${CMAKE_CURRENT_BINARY_DIR}/thrifty.h
@@ -59,4 +61,7 @@ add_executable(thrift
     ${GENERATE_HDR}
     ${CPP_SRC}
     )
+
+set_target_properties(compiler PROPERTIES OUTPUT_NAME thrift)
+
 
