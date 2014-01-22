@@ -22,6 +22,7 @@ set(ASYNC_HDR
     ${ASYNC_SRC_PATH}/TAsyncChannel.h)
 source_group("async" FILES ${ASYNC_SRC} ${ASYNC_HDR})
 
+list(APPEND FULL_SRC ${ASYNC_SRC} ${ASYNC_HDR})
 
 set(CONCUR_SRC_PATH ${SRC_PATH}/src/thrift/concurrency)
 set(CONCUR_SRC
@@ -40,6 +41,9 @@ set(CONCUR_HDR
     )
 source_group("concurrency" FILES ${CONCUR_SRC} ${CONCUR_HDR})
 
+list(APPEND FULL_SRC ${CONCUR_SRC} ${CONCUR_HDR})
+
+
 set(PROCESSOR_SRC_PATH ${SRC_PATH}/src/thrift/processor)
 set(PROCESSOR_SRC
     ${PROCESSOR_SRC_PATH}/PeekProcessor.cpp
@@ -48,6 +52,7 @@ set(PROCESSOR_HDR
     ${PROCESSOR_SRC_PATH}/PeekProcessor.h
     )
 source_group("processor" FILES ${PROCESSOR_SRC} ${PROCESSOR_HDR})
+list(APPEND FULL_SRC ${PROCESSOR_SRC} ${PROCESSOR_HDR})
 
 # protocol part of the lib
 set(PROTO_SRC_PATH ${SRC_PATH}/src/thrift/protocol)
@@ -67,6 +72,7 @@ set(PROTO_HDR
     ${PROTO_SRC_PATH}/TVirtualProtocol.h
     )
 source_group("protocol" FILES ${PROTO_SRC} ${PROTO_HDR})
+list(APPEND FULL_SRC ${PROTO_SRC} ${PROTO_HDR})
 
 # server part of the lib
 set(SRV_SRC_PATH ${SRC_PATH}/src/thrift/server)
@@ -80,6 +86,7 @@ set(SRV_HDR
     ${SRV_SRC_PATH}/TThreadPoolServer.h
     )
 source_group("server" FILES ${SRV_SRC} ${SRV_HDR})
+list(APPEND FULL_SRC ${SRV_SRC} ${SRV_HDR})
 
 # transport part of the lib
 set(TRANSPORT_SRC_PATH ${SRC_PATH}/src/thrift/transport)
@@ -100,20 +107,17 @@ if(NOT ZLIB_FOUND)
         PROPERTIES HEADER_FILE_ONLY TRUE)
 endif()
 source_group("transport" FILES ${TRANSPORT_SRC} ${TRANSPORT_HDR})
+list(APPEND FULL_SRC ${TRANSPORT_SRC} ${TRANSPORT_HDR})
 
+# msvc only??? will check this later
+if(MSVC)
+    # windows part of the lib
+    set(WIN_SRC_PATH ${SRC_PATH}/src/thrift/windows)
+    file(GLOB WIN_SRC ${WIN_SRC_PATH}/*.cpp)
+    file(GLOB WIN_HDR ${WIN_SRC_PATH}/*.h)
+    source_group("windows" FILES ${WIN_SRC} ${WIN_HDR})
+    list(APPEND FULL_SRC ${WIN_SRC} ${WIN_HDR})
+endif()
 
-add_library(libthrift
-    ${ASYNC_SRC}
-    ${ASYNC_HDR}
-    ${CONCUR_SRC}
-    ${CONCUR_HDR}
-    ${PROCESSOR_SRC}
-    ${PROCESSOR_HDR}
-    ${PROTO_SRC}
-    ${PROTO_HDR}
-    ${SRV_SRC}
-    ${SRV_HDR}
-    ${TRANSPORT_SRC}
-    ${TRANSPORT_HDR}
-    )
+add_library(libthrift ${FULL_SRC})
 
