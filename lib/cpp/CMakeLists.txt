@@ -119,5 +119,11 @@ if(MSVC)
     list(APPEND FULL_SRC ${WIN_SRC} ${WIN_HDR})
 endif()
 
+set(LIBTHRIFT_SRC_PATH ${SRC_PATH}/src/thrift)
+file(GLOB LTHRIFT_SRC ${LIBTHRIFT_SRC_PATH}/*.cpp)
+file(GLOB LTHRIFT_HDR ${LIBTHRIFT_SRC_PATH}/*.h)
+source_group("thrift" FILES ${LTHRIFT_SRC} ${LTHRIFT_HDR})
+list(APPEND FULL_SRC ${LTHRIFT_SRC} ${LTHRIFT_HDR})
+
 add_library(libthrift ${FULL_SRC})
 
