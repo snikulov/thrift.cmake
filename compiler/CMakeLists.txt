@@ -27,7 +27,7 @@ if(MSVC)
     add_definitions(-DYY_NO_UNISTD_H)
 endif()
 
-configure_file(${COMP_SRC_PATH}/src/windows/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h COPYONLY)
+configure_file(${COMP_SRC_PATH}/src/windows/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h @ONLY)
 
 include_directories(${COMP_SRC_PATH}/src/windows)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
