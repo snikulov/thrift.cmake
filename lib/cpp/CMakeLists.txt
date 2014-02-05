@@ -1,10 +1,24 @@
-project(libthrift)
+project(libraries)
 
 # set compiler sources root path
 set(LIBTHRIFT_SRC_PATH ${THRIFT_SRC_ROOT}/lib/cpp)
 file(TO_CMAKE_PATH ${LIBTHRIFT_SRC_PATH} SRC_PATH)
 
-find_package(Boost COMPONENTS thread system REQUIRED)
+if(WITH_BOOSTTHREADS)
+    find_package(Boost COMPONENTS thread system REQUIRED)
+    set(LIBTHRIFT_SOURCES
+        ${SRC_PATH}/src/thrift/concurrency/BoostThreadFactory.cpp
+        ${SRC_PATH}/src/thrift/concurrency/BoostMonitor.cpp
+        ${SRC_PATH}/src/thrift/concurrency/BoostMutex.cpp
+    )
+else()
+    find_package(Boost COMPONENTS system REQUIRED)
+    set(LIBTHRIFT_SOURCES
+        ${SRC_PATH}/src/thrift/concurrency/Mutex.cpp
+        ${SRC_PATH}/src/thrift/concurrency/Monitor.cpp
+        ${SRC_PATH}/src/thrift/concurrency/PosixThreadFactory.cpp
+    )
+endif()
 if (Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
 else()
@@ -16,120 +30,103 @@ find_package(OpenSSL)
 
 include_directories(${SRC_PATH}/src)
 
-# async subfolder
-set(ASYNC_SRC_PATH ${SRC_PATH}/src/thrift/async)
-set(ASYNC_SRC
-    ${ASYNC_SRC_PATH}/TAsyncChannel.cpp)
-set(ASYNC_HDR
-    ${ASYNC_SRC_PATH}/TAsyncChannel.h)
-source_group("async" FILES ${ASYNC_SRC} ${ASYNC_HDR})
+set(LIBTHRIFT_SOURCES
+    ${LIBTHRIFT_SOURCES}
+    ${SRC_PATH}/src/thrift/Thrift.cpp
+    ${SRC_PATH}/src/thrift/TApplicationException.cpp
+    ${SRC_PATH}/src/thrift/VirtualProfiling.cpp
+    ${SRC_PATH}/src/thrift/concurrency/ThreadManager.cpp
+    ${SRC_PATH}/src/thrift/concurrency/TimerManager.cpp
+    ${SRC_PATH}/src/thrift/concurrency/Util.cpp
+    ${SRC_PATH}/src/thrift/protocol/TDebugProtocol.cpp
+    ${SRC_PATH}/src/thrift/protocol/TDenseProtocol.cpp
+    ${SRC_PATH}/src/thrift/protocol/TJSONProtocol.cpp
+    ${SRC_PATH}/src/thrift/protocol/TBase64Utils.cpp
+    ${SRC_PATH}/src/thrift/protocol/TMultiplexedProtocol.cpp
+    ${SRC_PATH}/src/thrift/transport/TTransportException.cpp
+    ${SRC_PATH}/src/thrift/transport/TFDTransport.cpp
+    ${SRC_PATH}/src/thrift/transport/TFileTransport.cpp
+    ${SRC_PATH}/src/thrift/transport/TSimpleFileTransport.cpp
+    ${SRC_PATH}/src/thrift/transport/THttpTransport.cpp
+    ${SRC_PATH}/src/thrift/transport/THttpClient.cpp
+    ${SRC_PATH}/src/thrift/transport/THttpServer.cpp
+    ${SRC_PATH}/src/thrift/transport/TSocket.cpp
+    ${SRC_PATH}/src/thrift/transport/TPipe.cpp
+    ${SRC_PATH}/src/thrift/transport/TPipeServer.cpp
+    ${SRC_PATH}/src/thrift/transport/TSSLSocket.cpp
+    ${SRC_PATH}/src/thrift/transport/TSocketPool.cpp
+    ${SRC_PATH}/src/thrift/transport/TServerSocket.cpp
+    ${SRC_PATH}/src/thrift/transport/TSSLServerSocket.cpp
+    ${SRC_PATH}/src/thrift/transport/TTransportUtils.cpp
+    ${SRC_PATH}/src/thrift/transport/TBufferTransports.cpp
+    ${SRC_PATH}/src/thrift/server/TServer.cpp
+    ${SRC_PATH}/src/thrift/server/TSimpleServer.cpp
+    ${SRC_PATH}/src/thrift/server/TThreadPoolServer.cpp
+    ${SRC_PATH}/src/thrift/server/TThreadedServer.cpp
+    ${SRC_PATH}/src/thrift/async/TAsyncChannel.cpp
+    ${SRC_PATH}/src/thrift/processor/PeekProcessor.cpp
+)
 
-list(APPEND FULL_SRC ${ASYNC_SRC} ${ASYNC_HDR})
+set(LIBTHRIFTNB_SOURCES
+    ${SRC_PATH}/src/thrift/server/TNonblockingServer.cpp
+    ${SRC_PATH}/src/thrift/async/TAsyncProtocolProcessor.cpp
+    ${SRC_PATH}/src/thrift/async/TEvhttpServer.cpp
+    ${SRC_PATH}/src/thrift/async/TEvhttpClientChannel.cpp
+)
 
-set(CONCUR_SRC_PATH ${SRC_PATH}/src/thrift/concurrency)
-set(CONCUR_SRC
-    ${CONCUR_SRC_PATH}/BoostMonitor.cpp
-    ${CONCUR_SRC_PATH}/BoostMutex.cpp
-    ${CONCUR_SRC_PATH}/BoostThreadFactory.cpp
-    ${CONCUR_SRC_PATH}/StdThreadFactory.cpp
-    ${CONCUR_SRC_PATH}/ThreadManager.cpp
-    ${CONCUR_SRC_PATH}/TimerManager.cpp
-    ${CONCUR_SRC_PATH}/Util.cpp
-    )
-set(CONCUR_HDR
-    ${CONCUR_SRC_PATH}/BoostThreadFactory.h
-    ${CONCUR_SRC_PATH}/PlatformThreadFactory.h
-    ${CONCUR_SRC_PATH}/StdThreadFactory.h
-    )
-source_group("concurrency" FILES ${CONCUR_SRC} ${CONCUR_HDR})
+set(LIBTHRIFTZ_SOURCES
+    ${SRC_PATH}/src/thrift/transport/TZlibTransport.cpp
+)
 
-list(APPEND FULL_SRC ${CONCUR_SRC} ${CONCUR_HDR})
+set(LIBTHRIFTQT_SOURCES
+    ${SRC_PATH}/src/thrift/qt/moc_TQTcpServer.cpp
+    ${SRC_PATH}/src/thrift/qt/TQIODeviceTransport.cpp
+    ${SRC_PATH}/src/thrift/qt/TQTcpServer.cpp
+)
 
-
-set(PROCESSOR_SRC_PATH ${SRC_PATH}/src/thrift/processor)
-set(PROCESSOR_SRC
-    ${PROCESSOR_SRC_PATH}/PeekProcessor.cpp
-    )
-set(PROCESSOR_HDR
-    ${PROCESSOR_SRC_PATH}/PeekProcessor.h
-    )
-source_group("processor" FILES ${PROCESSOR_SRC} ${PROCESSOR_HDR})
-list(APPEND FULL_SRC ${PROCESSOR_SRC} ${PROCESSOR_HDR})
-
-# protocol part of the lib
-set(PROTO_SRC_PATH ${SRC_PATH}/src/thrift/protocol)
-set(PROTO_SRC
-    ${PROTO_SRC_PATH}/TBase64Utils.cpp
-    ${PROTO_SRC_PATH}/TDebugProtocol.cpp
-    ${PROTO_SRC_PATH}/TDenseProtocol.cpp
-    ${PROTO_SRC_PATH}/TJSONProtocol.cpp
-    )
-set(PROTO_HDR
-    ${PROTO_SRC_PATH}/TBinaryProtocol.h
-    ${PROTO_SRC_PATH}/TBinaryProtocol.tcc
-    ${PROTO_SRC_PATH}/TDebugProtocol.h
-    ${PROTO_SRC_PATH}/TDenseProtocol.h
-    ${PROTO_SRC_PATH}/TJSONProtocol.h
-    ${PROTO_SRC_PATH}/TProtocol.h
-    ${PROTO_SRC_PATH}/TVirtualProtocol.h
-    )
-source_group("protocol" FILES ${PROTO_SRC} ${PROTO_HDR})
-list(APPEND FULL_SRC ${PROTO_SRC} ${PROTO_HDR})
-
-# server part of the lib
-set(SRV_SRC_PATH ${SRC_PATH}/src/thrift/server)
-set(SRV_SRC
-    ${SRV_SRC_PATH}/TSimpleServer.cpp
-    ${SRV_SRC_PATH}/TThreadPoolServer.cpp
-    )
-set(SRV_HDR
-    ${SRV_SRC_PATH}/TServer.h
-    ${SRV_SRC_PATH}/TSimpleServer.h
-    ${SRV_SRC_PATH}/TThreadPoolServer.h
-    )
-source_group("server" FILES ${SRV_SRC} ${SRV_HDR})
-list(APPEND FULL_SRC ${SRV_SRC} ${SRV_HDR})
-
-# transport part of the lib
-set(TRANSPORT_SRC_PATH ${SRC_PATH}/src/thrift/transport)
-file(GLOB TRANSPORT_SRC ${TRANSPORT_SRC_PATH}/*.cpp)
-file(GLOB TRANSPORT_HDR ${TRANSPORT_SRC_PATH}/*.h)
 if(NOT OPENSSL_FOUND)
     # hack to remove TSSLSocket.cpp and TSSLServerSocket.cpp
     # from compilation if OPENSSL not found
     set_source_files_properties(
-            ${TRANSPORT_SRC_PATH}/TSSLSocket.cpp
-            ${TRANSPORT_SRC_PATH}/TSSLServerSocket.cpp
+            ${SRC_PATH}/src/thrift/transport/TSSLSocket.cpp
+            ${SRC_PATH}/src/thrift/transport/TSSLServerSocket.cpp
         PROPERTIES HEADER_FILE_ONLY TRUE)
 else()
     include_directories(${OPENSSL_INCLUDE_DIR})
 endif()
 
-if(NOT ZLIB_FOUND)
-    set_source_files_properties(
-            ${TRANSPORT_SRC_PATH}/TZlibTransport.cpp
-        PROPERTIES HEADER_FILE_ONLY TRUE)
-else()
-    include_directories(${ZLIB_INCLUDE_DIRS})
-endif()
-source_group("transport" FILES ${TRANSPORT_SRC} ${TRANSPORT_HDR})
-list(APPEND FULL_SRC ${TRANSPORT_SRC} ${TRANSPORT_HDR})
-
 # msvc only??? will check this later
 if(MSVC)
     # windows part of the lib
-    set(WIN_SRC_PATH ${SRC_PATH}/src/thrift/windows)
-    file(GLOB WIN_SRC ${WIN_SRC_PATH}/*.cpp)
-    file(GLOB WIN_HDR ${WIN_SRC_PATH}/*.h)
-    source_group("windows" FILES ${WIN_SRC} ${WIN_HDR})
-    list(APPEND FULL_SRC ${WIN_SRC} ${WIN_HDR})
+    file(GLOB WIN_SRC ${SRC_PATH}/src/thrift/windows/*.cpp)
+    file(GLOB WIN_HDR ${SRC_PATH}/src/thrift/windows/*.h)
+    list(APPEND LIBTHRIFT_SOURCES ${WIN_SRC} ${WIN_HDR})
+    source_group("libthrift" FILES ${LIBTHRIFT_SOURCES})
 endif()
 
-set(LIBTHRIFT_SRC_PATH ${SRC_PATH}/src/thrift)
-file(GLOB LTHRIFT_SRC ${LIBTHRIFT_SRC_PATH}/*.cpp)
-file(GLOB LTHRIFT_HDR ${LIBTHRIFT_SRC_PATH}/*.h)
-source_group("thrift" FILES ${LTHRIFT_SRC} ${LTHRIFT_HDR})
-list(APPEND FULL_SRC ${LTHRIFT_SRC} ${LTHRIFT_HDR})
+add_library(libthrift ${LIBTHRIFT_SOURCES})
 
-add_library(libthrift ${FULL_SRC})
+if(ZLIB_FOUND)
+    if(MSVC)
+        source_group("libthriftz" FILES ${LIBTHRIFTZ_SOURCES})
+    endif()
 
+    include_directories(${ZLIB_INCLUDE_DIRS})
+    add_library(libthriftz ${LIBTHRIFTZ_SOURCES})
+endif()
+
+if(LIBEVENT_FOUND)
+    if(MSVC)
+        source_group("libthriftnb" FILES ${LIBTHRIFTNB_SOURCES})
+    endif()
+
+    add_library(libthriftnb ${LIBTHRIFTNB_SOURCES})
+endif()
+
+if(QT_FOUND)
+    if(MSVC)
+        source_group("libthriftqt" FILES ${LIBTHRIFTQT_SOURCES})
+    endif()
+
+    add_library(libthrifqt ${LIBTHRIFTZ_SOURCES})
+endif()
