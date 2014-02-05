@@ -6,11 +6,13 @@ file(TO_CMAKE_PATH ${LIBTHRIFT_SRC_PATH} SRC_PATH)
 
 find_package(Boost COMPONENTS thread system REQUIRED)
 if (Boost_FOUND)
-    # disable autolinking feature
     include_directories(${Boost_INCLUDE_DIR})
 else()
     message(FATAL_ERROR "Boost required to build Apache LibThrift")
 endif()
+
+find_package(ZLIB)
+find_package(OpenSSL)
 
 include_directories(${SRC_PATH}/src)
 
@@ -99,12 +101,16 @@ if(NOT OPENSSL_FOUND)
             ${TRANSPORT_SRC_PATH}/TSSLSocket.cpp
             ${TRANSPORT_SRC_PATH}/TSSLServerSocket.cpp
         PROPERTIES HEADER_FILE_ONLY TRUE)
+else()
+    include_directories(${OPENSSL_INCLUDE_DIR})
 endif()
 
 if(NOT ZLIB_FOUND)
     set_source_files_properties(
             ${TRANSPORT_SRC_PATH}/TZlibTransport.cpp
         PROPERTIES HEADER_FILE_ONLY TRUE)
+else()
+    include_directories(${ZLIB_INCLUDE_DIRS})
 endif()
 source_group("transport" FILES ${TRANSPORT_SRC} ${TRANSPORT_HDR})
 list(APPEND FULL_SRC ${TRANSPORT_SRC} ${TRANSPORT_HDR})
