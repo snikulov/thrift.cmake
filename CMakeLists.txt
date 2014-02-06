@@ -13,11 +13,27 @@ message("Generating project for Apache Thrift version: ${PACKAGE_VERSION}")
 option(WITH_BOOSTTHREADS "Build with Boost::Threads" ON)
 option(WITH_TESTS "Build tests" OFF)
 
+set(_boost_COMPONENTS
+    system
+    )
+
 if(WITH_BOOSTTHREADS)
-    find_package(Boost COMPONENTS thread system REQUIRED)
-else()
-    find_package(Boost COMPONENTS system REQUIRED)
+    set(_boost_COMPONENTS
+        ${_boost_COMPONENTS}
+        thread
+        )
 endif()
+
+if(WITH_TESTS)
+    set(_boost_COMPONENTS
+        ${_boost_COMPONENTS}
+        unit_test_framework
+        )
+    include(CTest)
+    enable_testing()
+endif()
+
+find_package(Boost COMPONENTS ${_boost_COMPONENTS} REQUIRED)
 
 add_subdirectory(compiler)
 add_subdirectory(lib)
