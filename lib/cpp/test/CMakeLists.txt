@@ -135,13 +135,63 @@ target_link_libraries(unittests testgencpp libthrift ${Boost_UNIT_TEST_FRAMEWORK
 add_test(unittests unittests)
 
 if(NOT MSVC)
-add_executable(filetransporttest ${FILETRANSPORTTEST_SOURCES})
-set_target_properties(filetransporttest
-    PROPERTIES
-        COMPILE_DEFINITIONS BOOST_ALL_NO_LIB
-    )
-target_link_libraries(filetransporttest testgencpp libthrift ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-add_test(filetransporttest filetransporttest)
+    add_executable(filetransporttest ${FILETRANSPORTTEST_SOURCES})
+    set_target_properties(filetransporttest
+        PROPERTIES
+            COMPILE_DEFINITIONS BOOST_ALL_NO_LIB
+        )
+    target_link_libraries(filetransporttest testgencpp libthrift ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+    add_test(filetransporttest filetransporttest)
 endif()
 
+if(ZLIB_FOUND)
+    set(ZLIBTEST_SOURCES
+        ${TEST_SRC_PATH}/ZlibTest.cpp
+        )
+    include_directories(${ZLIB_INCLUDE_DIRS})
+    add_executable(zlibtest ${ZLIBTEST_SOURCES})
+    target_link_libraries(zlibtest
+       testgencpp libthrift libthriftz
+       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+       ${ZLIB_LIBRARIES})
+   add_test(zlibtest zlibtest)
+endif()
+
+set(DebugProtoTest_SOURCES
+    ${TEST_SRC_PATH}/DebugProtoTest.cpp)
+add_executable(DebugProtoTest ${DebugProtoTest_SOURCES})
+target_link_libraries(DebugProtoTest testgencpp libthrift)
+add_test(debugprototest DebugProtoTest)
+
+set(JSONProtoTest_SOURCES
+    ${TEST_SRC_PATH}/JSONProtoTest.cpp)
+add_executable(JSONProtoTest ${JSONProtoTest_SOURCES})
+target_link_libraries(JSONProtoTest testgencpp libthrift)
+add_test(jsonprototest JSONProtoTest)
+
+set(TFDTransportTest_SOURCES
+    ${TEST_SRC_PATH}/TFDTransportTest.cpp)
+add_executable(TFDTransportTest ${TFDTransportTest_SOURCES})
+target_link_libraries(TFDTransportTest testgencpp libthrift)
+add_test(tfdtransporttest TFDTransportTest)
+
+set(TPipedTransportTest_SOURCES
+    ${TEST_SRC_PATH}/TPipedTransportTest.cpp)
+add_executable(TPipedTransportTest ${TPipedTransportTest_SOURCES})
+target_link_libraries(TPipedTransportTest testgencpp libthrift)
+add_test(tpipedtransporttest TPipedTransportTest)
+
+if(NOT MSVC)
+    # got error 
+    # C:\WORK\GITHUB\thrift\lib\cpp\src\thrift/protocol/TCompactProtocol.tcc(32) :
+    # fatal error C1060: compiler is out of heap space
+
+    set(AllProtocolsTest_SOURCES
+    ${TEST_SRC_PATH}/AllProtocolTests.cpp
+    ${TEST_SRC_PATH}/AllProtocolTests.tcc
+    ${TEST_SRC_PATH}/GenericHelpers.h)
+add_executable(AllProtocolTests ${AllProtocolsTest_SOURCES})
+target_link_libraries(AllProtocolTests testgencpp libthrift)
+add_test(allprotocoltest AllProtocolTests)
+endif()
 
