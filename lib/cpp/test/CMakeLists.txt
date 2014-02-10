@@ -183,10 +183,10 @@ add_test(tpipedtransporttest TPipedTransportTest)
 
 if(NOT MSVC)
     # got error 
-    # C:\WORK\GITHUB\thrift\lib\cpp\src\thrift/protocol/TCompactProtocol.tcc(32) :
+    # lib\cpp\src\thrift/protocol/TCompactProtocol.tcc(32) :
     # fatal error C1060: compiler is out of heap space
-
-    set(AllProtocolsTest_SOURCES
+    #TODO: Need to hack SIGNED_RIGHT_SHIFT_IS macro
+set(AllProtocolsTest_SOURCES
     ${TEST_SRC_PATH}/AllProtocolTests.cpp
     ${TEST_SRC_PATH}/AllProtocolTests.tcc
     ${TEST_SRC_PATH}/GenericHelpers.h)
@@ -195,3 +195,25 @@ target_link_libraries(AllProtocolTests testgencpp libthrift)
 add_test(allprotocoltest AllProtocolTests)
 endif()
 
+set(OptionalRequiredTest_SOURCES
+    ${TEST_SRC_PATH}/OptionalRequiredTest.cpp)
+add_executable(OptionalRequiredTest ${OptionalRequiredTest_SOURCES})
+target_link_libraries(OptionalRequiredTest testgencpp libthrift)
+add_test(optionalrequiredtest OptionalRequiredTest)
+
+set(SpecializationTest_SOURCES
+    ${TEST_SRC_PATH}/SpecializationTest.cpp)
+add_executable(SpecializationTest ${SpecializationTest_SOURCES})
+target_link_libraries(SpecializationTest testgencpp libthrift)
+add_test(specializationtest SpecializationTest)
+
+if(0)
+set(concurrency_test_SOURCES
+    ${TEST_SRC_PATH}/concurrency/Tests.cpp
+    ${TEST_SRC_PATH}/concurrency/ThreadFactoryTests.h
+    ${TEST_SRC_PATH}/concurrency/ThreadManagerTests.h
+    ${TEST_SRC_PATH}/concurrency/TimerManagerTests.h)
+add_executable(concurrency_test ${concurrency_test_SOURCES})
+target_link_libraries(concurrency_test testgencpp libthrift)
+add_test(concurrencytest concurrency_test)
+endif()
