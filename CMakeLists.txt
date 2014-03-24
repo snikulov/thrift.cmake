@@ -35,5 +35,8 @@ endif()
 
 find_package(Boost COMPONENTS ${_boost_COMPONENTS} REQUIRED)
 
+include(CheckIncludeFileCXX)
+CHECK_INCLUDE_FILE_CXX(mutex HAVE_STDMUTEX_H)
+
 add_subdirectory(compiler)
 add_subdirectory(lib)

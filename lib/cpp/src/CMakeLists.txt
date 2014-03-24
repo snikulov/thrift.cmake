@@ -11,11 +11,19 @@ if(WITH_BOOSTTHREADS)
         ${SRC_PATH}/src/thrift/concurrency/BoostMutex.cpp
     )
 else()
-    set(LIBTHRIFT_SOURCES
-        ${SRC_PATH}/src/thrift/concurrency/Mutex.cpp
-        ${SRC_PATH}/src/thrift/concurrency/Monitor.cpp
-        ${SRC_PATH}/src/thrift/concurrency/PosixThreadFactory.cpp
-    )
+    if(HAVE_STDMUTEX_H)
+        set(LIBTHRIFT_SOURCES
+            ${SRC_PATH}/src/thrift/concurrency/StdMutex.cpp
+            ${SRC_PATH}/src/thrift/concurrency/StdMonitor.cpp
+            ${SRC_PATH}/src/thrift/concurrency/StdThreadFactory.cpp
+        )
+    else()
+        set(LIBTHRIFT_SOURCES
+            ${SRC_PATH}/src/thrift/concurrency/Mutex.cpp
+            ${SRC_PATH}/src/thrift/concurrency/Monitor.cpp
+            ${SRC_PATH}/src/thrift/concurrency/PosixThreadFactory.cpp
+        )
+    endif()
 endif()
 
 find_package(ZLIB)
