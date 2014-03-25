@@ -11,7 +11,7 @@ thrift_get_version("${THRIFT_ABS_PATH}" THRIFT_MAJOR THRIFT_MINOR THRIFT_PATCH P
 message("Generating project for Apache Thrift version: ${PACKAGE_VERSION}")
 
 option(WITH_BOOSTTHREADS "Build with Boost::Threads" ON)
-option(WITH_TESTS "Build tests" OFF)
+option(WITH_TESTS "Build tests" ON)
 
 set(_boost_COMPONENTS
     system

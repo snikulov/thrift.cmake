@@ -64,3 +64,5 @@ add_executable(compiler
 
 set_target_properties(compiler PROPERTIES OUTPUT_NAME thrift)
 
+install(TARGETS compiler
+    RUNTIME DESTINATION bin)

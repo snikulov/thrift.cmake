@@ -108,6 +108,8 @@ endif()
 
 add_library(libthrift ${LIBTHRIFT_SOURCES})
 
+list(APPEND __install_tgts libthrift)
+
 if(ZLIB_FOUND)
     if(MSVC)
         source_group("libthriftz" FILES ${LIBTHRIFTZ_SOURCES})
@@ -115,6 +117,7 @@ if(ZLIB_FOUND)
 
     include_directories(${ZLIB_INCLUDE_DIRS})
     add_library(libthriftz ${LIBTHRIFTZ_SOURCES})
+    list(APPEND __install_tgts libthriftz)
 endif()
 
 if(LIBEVENT_FOUND)
@@ -123,6 +126,7 @@ if(LIBEVENT_FOUND)
     endif()
 
     add_library(libthriftnb ${LIBTHRIFTNB_SOURCES})
+    list(APPEND __install_tgts libthriftnb)
 endif()
 
 if(QT_FOUND)
@@ -130,5 +134,14 @@ if(QT_FOUND)
         source_group("libthriftqt" FILES ${LIBTHRIFTQT_SOURCES})
     endif()
 
-    add_library(libthrifqt ${LIBTHRIFTZ_SOURCES})
+    add_library(libthriftqt ${LIBTHRIFTQT_SOURCES})
+    list(APPEND __install_tgts libthriftqt)
 endif()
+
+install(TARGETS ${__install_tgts}
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)
+
+install(DIRECTORY ${SRC_PATH}/src/thrift/
+    DESTINATION include FILES_MATCHING PATTERN "*.h")
