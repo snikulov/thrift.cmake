@@ -144,4 +144,4 @@ install(TARGETS ${__install_tgts}
     ARCHIVE DESTINATION lib)
 
 install(DIRECTORY ${SRC_PATH}/src/thrift/
-    DESTINATION include FILES_MATCHING PATTERN "*.h")
+    DESTINATION include/thrift FILES_MATCHING PATTERN "*.h")
