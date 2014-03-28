@@ -97,7 +97,8 @@ set(UNITTESTS_SOURCES
     ${TEST_SRC_PATH}/TBufferBaseTest.cpp
     ${TEST_SRC_PATH}/Base64Test.cpp
     )
-if(NOT WITH_BOOSTTHREADS)
+
+if(ENABLE_POSIX_RWMUTEX_STARVE_TEST)
     set(UNITTESTS_SOURCES
         ${UNITTESTS_SOURCES}
         ${TEST_SRC_PATH}/RWMutexStarveTest.cpp

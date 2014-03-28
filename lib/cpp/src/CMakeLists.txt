@@ -23,6 +23,7 @@ else()
             ${SRC_PATH}/src/thrift/concurrency/Monitor.cpp
             ${SRC_PATH}/src/thrift/concurrency/PosixThreadFactory.cpp
         )
+        set(ENABLE_POSIX_RWMUTEX_STARVE_TEST ON PARENT_SCOPE)
     endif()
 endif()
 
