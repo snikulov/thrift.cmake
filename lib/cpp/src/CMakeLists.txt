@@ -146,3 +146,5 @@ install(TARGETS ${__install_tgts}
 
 install(DIRECTORY ${SRC_PATH}/src/thrift/
     DESTINATION include/thrift FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY ${SRC_PATH}/src/thrift/
+    DESTINATION include/thrift FILES_MATCHING PATTERN "*.tcc")
