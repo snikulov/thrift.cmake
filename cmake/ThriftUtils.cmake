@@ -1,4 +1,3 @@
-
 macro(thrift_get_version _config_ac_PATH vmajor vminor vpatch verstr)
     file(STRINGS "${_config_ac_PATH}/configure.ac" _thrift_VER_STRING_AUX REGEX "^AC_INIT")
     #    message("_trift_VER_STRING_AUX = ${_thrift_VER_STRING_AUX}")
