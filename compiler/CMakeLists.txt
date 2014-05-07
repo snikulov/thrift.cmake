@@ -3,8 +3,8 @@ project(compiler)
 # set compiler sources root path
 get_filename_component(ABS_PATH ${THRIFT_SRC_ROOT} ABSOLUTE)
 set(COMP_SRC_PATH ${ABS_PATH}/compiler/cpp)
-message("Thrift absolute source path = ${ABS_PATH}")
-message("Thrift compiler path = ${COMP_SRC_PATH}")
+message(STATUS "Thrift absolute source path = ${ABS_PATH}")
+message(STATUS "Thrift compiler path = ${COMP_SRC_PATH}")
 
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
