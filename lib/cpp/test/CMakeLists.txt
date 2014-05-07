@@ -75,7 +75,7 @@ add_custom_command(
     WORKING_DIRECTORY
         ${CMAKE_BINARY_DIR}
     )
-
+	
 set(LIBGENCPP_SOURCES
     ${GEN_FILES_PATH}/DebugProtoTest_types.cpp
     ${GEN_FILES_PATH}/DebugProtoTest_types.h
@@ -133,7 +133,7 @@ set_target_properties(unittests
         COMPILE_DEFINITIONS BOOST_ALL_NO_LIB
     )
 target_link_libraries(unittests testgencpp libthrift ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-add_test(unittests unittests)
+add_test(NAME unittests COMMAND unittests)
 
 if(NOT MSVC)
     add_executable(filetransporttest ${FILETRANSPORTTEST_SOURCES})
@@ -142,7 +142,7 @@ if(NOT MSVC)
             COMPILE_DEFINITIONS BOOST_ALL_NO_LIB
         )
     target_link_libraries(filetransporttest testgencpp libthrift ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-    add_test(filetransporttest filetransporttest)
+    add_test(NAME filetransporttest COMMAND filetransporttest)
 endif()
 
 if(ZLIB_FOUND)
@@ -155,32 +155,32 @@ if(ZLIB_FOUND)
        testgencpp libthrift libthriftz
        ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
        ${ZLIB_LIBRARIES})
-   add_test(zlibtest zlibtest)
+   add_test(NAME zlibtest COMMAND zlibtest)
 endif()
 
 set(DebugProtoTest_SOURCES
     ${TEST_SRC_PATH}/DebugProtoTest.cpp)
 add_executable(DebugProtoTest ${DebugProtoTest_SOURCES})
 target_link_libraries(DebugProtoTest testgencpp libthrift)
-add_test(debugprototest DebugProtoTest)
+add_test(NAME debugprototest COMMAND DebugProtoTest)
 
 set(JSONProtoTest_SOURCES
     ${TEST_SRC_PATH}/JSONProtoTest.cpp)
 add_executable(JSONProtoTest ${JSONProtoTest_SOURCES})
 target_link_libraries(JSONProtoTest testgencpp libthrift)
-add_test(jsonprototest JSONProtoTest)
+add_test(NAME jsonprototest COMMAND JSONProtoTest)
 
 set(TFDTransportTest_SOURCES
     ${TEST_SRC_PATH}/TFDTransportTest.cpp)
 add_executable(TFDTransportTest ${TFDTransportTest_SOURCES})
 target_link_libraries(TFDTransportTest testgencpp libthrift)
-add_test(tfdtransporttest TFDTransportTest)
+add_test(NAME tfdtransporttest COMMAND TFDTransportTest)
 
 set(TPipedTransportTest_SOURCES
     ${TEST_SRC_PATH}/TPipedTransportTest.cpp)
 add_executable(TPipedTransportTest ${TPipedTransportTest_SOURCES})
 target_link_libraries(TPipedTransportTest testgencpp libthrift)
-add_test(tpipedtransporttest TPipedTransportTest)
+add_test(NAME tpipedtransporttest COMMAND TPipedTransportTest)
 
 if(NOT MSVC)
     # got error 
@@ -193,20 +193,20 @@ set(AllProtocolsTest_SOURCES
     ${TEST_SRC_PATH}/GenericHelpers.h)
 add_executable(AllProtocolTests ${AllProtocolsTest_SOURCES})
 target_link_libraries(AllProtocolTests testgencpp libthrift)
-add_test(allprotocoltest AllProtocolTests)
+add_test(NAME allprotocoltest COMMAND AllProtocolTests)
 endif()
 
 set(OptionalRequiredTest_SOURCES
     ${TEST_SRC_PATH}/OptionalRequiredTest.cpp)
 add_executable(OptionalRequiredTest ${OptionalRequiredTest_SOURCES})
 target_link_libraries(OptionalRequiredTest testgencpp libthrift)
-add_test(optionalrequiredtest OptionalRequiredTest)
+add_test(NAME optionalrequiredtest COMMAND OptionalRequiredTest)
 
 set(SpecializationTest_SOURCES
     ${TEST_SRC_PATH}/SpecializationTest.cpp)
 add_executable(SpecializationTest ${SpecializationTest_SOURCES})
 target_link_libraries(SpecializationTest testgencpp libthrift)
-add_test(specializationtest SpecializationTest)
+add_test(NAME specializationtest COMMAND SpecializationTest)
 
 if(0)
 set(concurrency_test_SOURCES
