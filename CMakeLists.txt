@@ -8,7 +8,7 @@ include(ThriftUtils)
 get_filename_component(THRIFT_ABS_PATH ${THRIFT_SRC_ROOT} ABSOLUTE)
 thrift_get_version("${THRIFT_ABS_PATH}" THRIFT_MAJOR THRIFT_MINOR THRIFT_PATCH PACKAGE_VERSION)
 
-message("Generating project for Apache Thrift version: ${PACKAGE_VERSION}")
+message(STATUS "Generating project for Apache Thrift version: ${PACKAGE_VERSION}")
 set(VERSION "${PACKAGE_VERSION}")
 
 option(WITH_BOOSTTHREADS "Build with Boost::Threads" ON)
