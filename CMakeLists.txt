@@ -18,8 +18,8 @@ set(_boost_COMPONENTS
     system
     )
 
-set(USE_BOOST_THREAD ${WITH_BOOSTTHREADS})
 if(WITH_BOOSTTHREADS)
+    set(USE_BOOST_THREAD 1)
     set(_boost_COMPONENTS
         ${_boost_COMPONENTS}
         thread

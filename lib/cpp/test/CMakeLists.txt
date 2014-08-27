@@ -117,22 +117,22 @@ include_directories(${CMAKE_BINARY_DIR})
 
 add_library(testgencpp ${LIBGENCPP_SOURCES})
 
+# TODO: on windows I need static libs for linkage...
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost COMPONENTS ${_boost_COMPONENTS} date_time chrono REQUIRED)
+
 add_executable(benchmark ${BENCHMARK_SOURCES})
 set_target_properties(benchmark
     PROPERTIES
         COMPILE_DEFINITIONS _USE_MATH_DEFINES)
-target_link_libraries(benchmark testgencpp libthrift)
-
-# TODO: on windows I need static libs for linkage...
-set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost COMPONENTS ${_boost_COMPONENTS} REQUIRED)
+target_link_libraries(benchmark testgencpp libthrift ${Boost_LIBRARIES})
 
 add_executable(unittests ${UNITTESTS_SOURCES})
 set_target_properties(unittests
     PROPERTIES
         COMPILE_DEFINITIONS BOOST_ALL_NO_LIB
     )
-target_link_libraries(unittests testgencpp libthrift ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+target_link_libraries(unittests testgencpp libthrift ${Boost_LIBRARIES})
 add_test(NAME unittests COMMAND unittests)
 
 if(NOT MSVC)
@@ -161,25 +161,25 @@ endif()
 set(DebugProtoTest_SOURCES
     ${TEST_SRC_PATH}/DebugProtoTest.cpp)
 add_executable(DebugProtoTest ${DebugProtoTest_SOURCES})
-target_link_libraries(DebugProtoTest testgencpp libthrift)
+target_link_libraries(DebugProtoTest testgencpp libthrift ${Boost_LIBRARIES})
 add_test(NAME debugprototest COMMAND DebugProtoTest)
 
 set(JSONProtoTest_SOURCES
     ${TEST_SRC_PATH}/JSONProtoTest.cpp)
 add_executable(JSONProtoTest ${JSONProtoTest_SOURCES})
-target_link_libraries(JSONProtoTest testgencpp libthrift)
+target_link_libraries(JSONProtoTest testgencpp libthrift ${Boost_LIBRARIES})
 add_test(NAME jsonprototest COMMAND JSONProtoTest)
 
 set(TFDTransportTest_SOURCES
     ${TEST_SRC_PATH}/TFDTransportTest.cpp)
 add_executable(TFDTransportTest ${TFDTransportTest_SOURCES})
-target_link_libraries(TFDTransportTest testgencpp libthrift)
+target_link_libraries(TFDTransportTest testgencpp libthrift ${Boost_LIBRARIES})
 add_test(NAME tfdtransporttest COMMAND TFDTransportTest)
 
 set(TPipedTransportTest_SOURCES
     ${TEST_SRC_PATH}/TPipedTransportTest.cpp)
 add_executable(TPipedTransportTest ${TPipedTransportTest_SOURCES})
-target_link_libraries(TPipedTransportTest testgencpp libthrift)
+target_link_libraries(TPipedTransportTest testgencpp libthrift ${Boost_LIBRARIES})
 add_test(NAME tpipedtransporttest COMMAND TPipedTransportTest)
 
 if(NOT MSVC)
@@ -199,13 +199,13 @@ endif()
 set(OptionalRequiredTest_SOURCES
     ${TEST_SRC_PATH}/OptionalRequiredTest.cpp)
 add_executable(OptionalRequiredTest ${OptionalRequiredTest_SOURCES})
-target_link_libraries(OptionalRequiredTest testgencpp libthrift)
+target_link_libraries(OptionalRequiredTest testgencpp libthrift ${Boost_LIBRARIES})
 add_test(NAME optionalrequiredtest COMMAND OptionalRequiredTest)
 
 set(SpecializationTest_SOURCES
     ${TEST_SRC_PATH}/SpecializationTest.cpp)
 add_executable(SpecializationTest ${SpecializationTest_SOURCES})
-target_link_libraries(SpecializationTest testgencpp libthrift)
+target_link_libraries(SpecializationTest testgencpp libthrift ${Boost_LIBRARIES})
 add_test(NAME specializationtest COMMAND SpecializationTest)
 
 if(0)
