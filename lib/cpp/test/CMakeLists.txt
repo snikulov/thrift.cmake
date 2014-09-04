@@ -208,13 +208,11 @@ add_executable(SpecializationTest ${SpecializationTest_SOURCES})
 target_link_libraries(SpecializationTest testgencpp libthrift)
 add_test(NAME specializationtest COMMAND SpecializationTest)
 
-if(0)
-set(concurrency_test_SOURCES
+set(ConcurrencyTest_SOURCES
     ${TEST_SRC_PATH}/concurrency/Tests.cpp
     ${TEST_SRC_PATH}/concurrency/ThreadFactoryTests.h
     ${TEST_SRC_PATH}/concurrency/ThreadManagerTests.h
     ${TEST_SRC_PATH}/concurrency/TimerManagerTests.h)
-add_executable(concurrency_test ${concurrency_test_SOURCES})
-target_link_libraries(concurrency_test testgencpp libthrift)
-add_test(concurrencytest concurrency_test)
-endif()
+add_executable(ConcurrencyTest ${ConcurrencyTest_SOURCES})
+target_link_libraries(ConcurrencyTest testgencpp libthrift)
+add_test(NAME concurrencytest COMMAND ConcurrencyTest)
