@@ -96,6 +96,7 @@ set(UNITTESTS_SOURCES
     ${TEST_SRC_PATH}/TMemoryBufferTest.cpp
     ${TEST_SRC_PATH}/TBufferBaseTest.cpp
     ${TEST_SRC_PATH}/Base64Test.cpp
+    ${TEST_SRC_PATH}/ToStringTest.cpp 
     )
 
 if(ENABLE_POSIX_RWMUTEX_STARVE_TEST)
@@ -116,10 +117,6 @@ include_directories(${GEN_FILES_PATH})
 include_directories(${CMAKE_BINARY_DIR})
 
 add_library(testgencpp ${LIBGENCPP_SOURCES})
-
-# TODO: on windows I need static libs for linkage...
-set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost COMPONENTS ${_boost_COMPONENTS} date_time chrono REQUIRED)
 
 add_executable(benchmark ${BENCHMARK_SOURCES})
 set_target_properties(benchmark
@@ -208,11 +205,11 @@ add_executable(SpecializationTest ${SpecializationTest_SOURCES})
 target_link_libraries(SpecializationTest testgencpp libthrift ${Boost_LIBRARIES})
 add_test(NAME specializationtest COMMAND SpecializationTest)
 
-set(ConcurrencyTest_SOURCES
+set(concurrency_test_SOURCES
     ${TEST_SRC_PATH}/concurrency/Tests.cpp
     ${TEST_SRC_PATH}/concurrency/ThreadFactoryTests.h
     ${TEST_SRC_PATH}/concurrency/ThreadManagerTests.h
     ${TEST_SRC_PATH}/concurrency/TimerManagerTests.h)
-add_executable(ConcurrencyTest ${ConcurrencyTest_SOURCES})
-target_link_libraries(ConcurrencyTest testgencpp libthrift)
-add_test(NAME concurrencytest COMMAND ConcurrencyTest)
+add_executable(concurrency_test ${concurrency_test_SOURCES})
+target_link_libraries(concurrency_test testgencpp libthrift ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES})
+add_test(NAME concurrency_test COMMAND concurrency_test)

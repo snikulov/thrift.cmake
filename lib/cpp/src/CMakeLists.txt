@@ -27,18 +27,6 @@ else()
     endif()
 endif()
 
-find_package(ZLIB)
-find_package(OpenSSL)
-find_package(Libevent)
-
-if(Libevent_FOUND)
-    message("Found libevent")
-    message("LIBEVENT_INCLUDE_DIRS = ${LIBEVENT_INCLUDE_DIRS}")
-    message("LIBEVENT_LIBRARIES = ${LIBEVENT_LIBRARIES}")
-else()
-    message("libevent does not found")
-endif()
-
 include_directories(${Boost_INCLUDE_DIR})
 include_directories(${SRC_PATH}/src)
 

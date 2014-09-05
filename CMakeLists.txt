@@ -11,11 +11,14 @@ thrift_get_version("${THRIFT_ABS_PATH}" THRIFT_MAJOR THRIFT_MINOR THRIFT_PATCH P
 message(STATUS "Generating project for Apache Thrift version: ${PACKAGE_VERSION}")
 set(VERSION "${PACKAGE_VERSION}")
 
-option(WITH_BOOSTTHREADS "Build with Boost::Threads" ON)
-option(WITH_TESTS "Build tests" ON)
+option(WITH_BOOSTTHREADS    "Build with Boost::Threads"       ON)
+option(WITH_BOOST_LIBSTATIC "Boost will be statically linked" ON)
+option(WITH_TESTS           "Build tests"                     ON)
 
 set(_boost_COMPONENTS
     system
+    date_time
+    chrono
     )
 
 if(WITH_BOOSTTHREADS)
@@ -36,7 +39,20 @@ if(WITH_TESTS)
     enable_testing()
 endif()
 
+set(Boost_USE_STATIC_LIBS ${WITH_BOOST_LIBSTATIC})
 find_package(Boost COMPONENTS ${_boost_COMPONENTS} REQUIRED)
+find_package(ZLIB)
+find_package(OpenSSL)
+find_package(Libevent)
+
+# debug print
+if(Libevent_FOUND)
+    message("Found libevent")
+    message("LIBEVENT_INCLUDE_DIRS = ${LIBEVENT_INCLUDE_DIRS}")
+    message("LIBEVENT_LIBRARIES = ${LIBEVENT_LIBRARIES}")
+else()
+    message("libevent does not found")
+endif()
 
 include(CheckIncludeFileCXX)
 CHECK_INCLUDE_FILE_CXX(mutex HAVE_STDMUTEX_H)
