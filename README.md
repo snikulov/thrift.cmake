@@ -1,3 +1,10 @@
+NOTE: Project is obsoleted
+===========================
+
+Apache Thrift has added cmake support on master branch https://github.com/apache/thrift
+
+Use it and report issues to developers.
+
 thrift.cmake
 ============
 
